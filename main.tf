@@ -30,11 +30,7 @@ resource "azurerm_storage_account_network_rules" "network_rules" {
     default_action        = "Deny"
     bypass         = ["Logging","AzureServices","Metrics"]
     #virtual_network_subnet_ids = [azurerm_subnet.environment.id,azurerm_subnet.private_endpoint.id]
-    ip_rules                   = [chomp(data.http.myip.body)]
-    depends_on            = [
-    azurerm_storage_container.environment,
-    azurerm_storage_container.environmentlogs
-  ]
+    ip_rules                   = [chomp(data.http.myip.url)]
 }
 
 resource "azurerm_storage_container" "this" {
@@ -44,7 +40,7 @@ resource "azurerm_storage_container" "this" {
 }
 
 output "ipAddress" {
-  value = chomp(data.http.myip.body)
+  value = chomp(data.http.myip.url)
 }
 
 /*
