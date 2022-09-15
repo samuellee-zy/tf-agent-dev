@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "this" {
-	name = "sam-resource-group-test"
+	name = "sam-resource-group"
 	location = "australia east"
 
 }
