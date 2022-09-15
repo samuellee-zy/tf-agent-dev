@@ -28,7 +28,7 @@ resource "azurerm_storage_account" "this" {
 resource "azurerm_storage_account_network_rules" "network_rules" {
     storage_account_id  = azurerm_storage_account.this.id
     default_action        = "Deny"
-    bypass         = ["Logging","AzureServices","Metrics"]
+    #bypass         = ["Logging","AzureServices","Metrics"]
     #virtual_network_subnet_ids = [azurerm_subnet.environment.id,azurerm_subnet.private_endpoint.id]
     ip_rules                   = [chomp(data.http.myip.url)]
 }
