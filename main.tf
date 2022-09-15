@@ -8,17 +8,33 @@ resource "azurerm_resource_group" "this" {
 
 }
 
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
 resource "azurerm_storage_account" "this" {
-  name                     = "birthdayboysam"
+  name                     = "testsam"
   resource_group_name      = azurerm_resource_group.this.name
   location                 = azurerm_resource_group.this.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
 
-	network_rules {
-		default_action = "Deny"
-		ip_rules = ["20.46.110.61"]
-	}
+	# network_rules {
+	# 	default_action = "Deny"
+	# 	ip_rules = ["20.46.110.61"]
+	# }
+}
+
+resource "azurerm_storage_account_network_rules" "network_rules" {
+    storage_account_id  = azurerm_storage_account.this.id
+    default_action        = "Deny"
+    bypass         = ["Logging","AzureServices","Metrics"]
+    #virtual_network_subnet_ids = [azurerm_subnet.environment.id,azurerm_subnet.private_endpoint.id]
+    ip_rules                   = [chomp(data.http.myip.body)]
+    depends_on            = [
+    azurerm_storage_container.environment,
+    azurerm_storage_container.environmentlogs
+  ]
 }
 
 resource "azurerm_storage_container" "this" {
@@ -27,6 +43,9 @@ resource "azurerm_storage_container" "this" {
   container_access_type = "private"
 }
 
+output "ipAddress" {
+  value = chomp(data.http.myip.body)
+}
 
 /*
 # Azure Storage configuration
