@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "this" {
 }
 
 resource "azurerm_storage_account" "this" {
-  name                     = "sam-storage-account"
+  name                     = "samstorageaccount"
   resource_group_name      = azurerm_resource_group.this.name
   location                 = azurerm_resource_group.this.location
   account_tier             = "Standard"
