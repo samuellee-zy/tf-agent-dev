@@ -17,7 +17,11 @@ resource "azurerm_storage_account" "this" {
   resource_group_name      = azurerm_resource_group.this.name
   location                 = azurerm_resource_group.this.location
   account_tier             = "Standard"
-  account_replication_type = "GRS"
+  account_replication_type = "LRS"
+
+  identity {
+    type = "SystemAssigned"
+  }
 
 	# network_rules {
 	# 	default_action = "Deny"
@@ -28,7 +32,7 @@ resource "azurerm_storage_account" "this" {
 resource "azurerm_storage_account_network_rules" "network_rules" {
     storage_account_id  = azurerm_storage_account.this.id
     default_action        = "Deny"
-    #bypass         = ["Logging","AzureServices","Metrics"]
+    bypass         = ["Logging","AzureServices","Metrics"]
     #virtual_network_subnet_ids = [azurerm_subnet.environment.id,azurerm_subnet.private_endpoint.id]
     ip_rules                   = [chomp(data.http.myip.response_body)]
 }
@@ -56,6 +60,8 @@ resource "azurerm_storage_account" "environment" {
     type = "SystemAssigned"
   }
 }
+### COMPLETED AZURE STORAGE CONFIG
+
 resource "azurerm_storage_account_network_rules" "network_rules" {
     storage_account_id  = azurerm_storage_account.environment.id
     default_action        = "Deny"
